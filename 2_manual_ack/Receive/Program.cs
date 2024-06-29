@@ -14,6 +14,11 @@ channel.QueueDeclare(queue: "hello",
                      autoDelete: false,
                      arguments: null);
 
+// If two consumers are running, and all the even tasks take 1s and all the old tasks take 10s, round robin becomes a problem.
+// Fair Dispatch: prefetchCount: 1 says don't give more than 1 task to a queue at a time,
+// It means if consumer C1 is busy, rabbitmq looks for consumer C2, C3, in case if consumers are horizonally scaled (multiple instances deployed).
+channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+
 Console.WriteLine(" [*] Waiting for messages.");
 
 var consumer = new EventingBasicConsumer(channel);
