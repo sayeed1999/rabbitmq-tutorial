@@ -7,7 +7,9 @@ using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
 channel.QueueDeclare(queue: "hello",
-                     durable: false,
+// durable: true => the queue will survive a RabbitMQ node restart!
+// The messages won't be lost. :)
+                     durable: true,
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
